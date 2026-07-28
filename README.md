@@ -6,7 +6,7 @@ A YOLO26n-seg model fine-tuned to detect swimming pool lane lines and T-marks (w
 
 ## Motivation
 
-This project is a computer vision experiment exploring how well a lightweight segmentation model can identify pool lane lines and T-marks under real, imperfect pool conditions (glare, water distortion, varying angles). It's an early piece of a larger project I'm building - an assistive device for visually impaired swimmers that relies on spatial awareness of the pool. Camera-based lane detection is being explored as a possible complement to an ultrasonic positioning approach used elsewhere in that project.
+This project is a computer vision experiment exploring how well a lightweight segmentation model can identify pool lane lines and T-marks under real, imperfect pool conditions (glare, water distortion, varying angles). It's an early piece of a larger project I'm building - an **assistive device for visually impaired swimmers** that relies on spatial awareness of the pool. Camera-based lane detection is being explored as a possible complement to an ultrasonic positioning approach used elsewhere in that project.
 
 This notebook has not yet been integrated into the full device - it's testing whether the underlying detection problem is tractable before deciding how (or whether) it fits into the final system.
 
