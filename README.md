@@ -1,6 +1,6 @@
 # Swimming Pool Underwater Lane Line Detection
 
-A YOLO26n-seg model fine-tuned to detect swimming pool lane lines and T-marks (wall/turn markers) from underwater and above-water pool footage.
+A YOLO26n-seg model fine-tuned to detect swimming pool lane lines and T-marks (wall/turn markers) from underwater pool footage.
 
 ![Sample detection](results/pooldetectionsecondsuccess.png)
 
