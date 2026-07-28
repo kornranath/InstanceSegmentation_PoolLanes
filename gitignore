@@ -1,0 +1,27 @@
+# Dataset
+data/
+*.yaml
+!data.yaml.example
+
+# Model weights & checkpoints
+*.pt
+*.pth
+runs/
+checkpoints/
+
+# Raw test images (only samples/ and results/ are committed)
+*.jpg
+*.jpeg
+*.png
+!samples/*.jpg
+!samples/*.jpeg
+!results/*.png
+!results/*.jpg
+
+# Python / Jupyter
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+
+# Colab
+.config/
