@@ -40,7 +40,7 @@ This notebook has not yet been integrated into the full device - it's testing wh
 | lane | 0.794 | 0.412 | 0.706 |
 | t_mark | 0.598 | 0.294 | 0.660 |
 
-**Reading these numbers:** precision is high (~91%) - when the model predicts a lane line or T-mark, it's usually correct. Recall is lower (~62%) - it misses a meaningful fraction of lines/marks that are actually present, more often than it produces false positives. `lane` detection is noticeably stronger than `t_mark` detection across every metric, which lines up with what the sample image below shows: high-confidence lane predictions (0.86–0.95) vs. much lower-confidence T-mark predictions (0.29–0.40).
+**Reading these numbers:** precision is high (~91%) - when model predicts a lane line or T-mark, usually correct. Recall is lower (~62%) - misses a meaningful fraction of lines/marks that are actually present, more often than it produces false positives. `lane` detection noticeably stronger than `t_mark` detection across every metric, which lines up with sample image below : high-confidence lane predictions (0.86–0.95) vs. much lower-confidence T-mark predictions (0.29–0.40).
 
 **Sample result:**
 
@@ -48,11 +48,11 @@ This notebook has not yet been integrated into the full device - it's testing wh
 |---|---|
 | ![Raw input](samples/povswim1.jpg) | ![Segmented output](results/pooldetectionfirstsuccess.png) |
 
-The model correctly picks out all three visible lane lines in this frame, including the two off to the side, not just the center one directly in view. T-mark detection is present but visibly less confident.
+Model correctly picks out all three visible lane lines in this frame, including two off to the side, not just the center one directly in view. T-mark detection is present but visibly less confident. Left-most line has also been mistakenly flagged as `lane`.
 
 ## Limitations / Next Steps
 
-- **T-mark detection is weak** relative to lane detection (mAP@0.5 of 0.598 vs 0.794) - likely needs more T-mark examples in the training set, since they're smaller and less visually distinct than the lane lines.
+- **T-mark detection is weak** relative to lane detection (mAP@0.5 of 0.598 vs 0.794) - likely needs more T-mark examples in training set, since they're smaller and less visually distinct than the lane lines.
 - **Recall is the main bottleneck**, not precision - the model is conservative and misses real lines/marks more than it hallucinates fake ones. Worth investigating whether this is a confidence-threshold issue or a genuine detection gap (e.g. lines at the edge of frame, poor lighting).
 - **Small validation set** (26 images) - metrics should be treated as a rough signal, not a precise benchmark.
 - **Only tested on still images**, not video - real-world use (whether for the swim assistive device or otherwise) would need to handle a continuous video stream, motion blur, and frame-to-frame consistency.
