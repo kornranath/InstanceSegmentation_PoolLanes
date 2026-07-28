@@ -61,4 +61,4 @@ Model correctly picks out all three visible lane lines in this frame, including 
 
 ## Running it
 
-GPU runtime recommended - trained on a T4. Main dependency is `ultralytics`, installed in the notebook itself. Requires a Roboflow-exported dataset (linked above) matching the path set in the config cell at the top of the notebook (Must begin `train`, `val`, and `test` paths with `/content` in `data.yaml`).
+GPU runtime recommended - trained on a T4. Main dependency is `ultralytics`, installed in the notebook itself. Requires a Roboflow-exported dataset (linked above) matching the path set in the config cell at the top of the notebook (must begin `train`, `val`, and `test` paths with `/content` in `data.yaml`).
