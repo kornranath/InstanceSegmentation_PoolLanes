@@ -48,7 +48,7 @@ This notebook has not yet been integrated into the full device - it's testing wh
 |---|---|
 | ![Raw input](samples/povswim1.jpg) | ![Segmented output](results/pooldetectionfirstsuccess.png) |
 
-Model correctly picks out all three visible lane lines in this frame, including two off to the side, not just the center one directly in view. T-mark detection is present but visibly less confident. Left-most line has also been mistakenly flagged as `lane`.
+Model correctly picks out all three visible lane lines in this frame, including two off to the side, not just the center one directly in view, but left-most line has been mistakenly flagged as `lane`. T-mark detection is also present but visibly less confident. 
 
 ## Limitations / Next Steps
 
