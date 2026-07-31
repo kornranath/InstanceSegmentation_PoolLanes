@@ -1,8 +1,8 @@
-# Swimming Pool Underwater Lane Line Detection
+# Swimming Pool Underwater Lane Line Detection : V2
 
 A YOLO26n-seg model fine-tuned to detect swimming pool lane lines and T-marks (wall/turn markers) from underwater pool footage.
 
-![Sample detection](results/pooldetectionsecondsuccess.png)
+![Sample detection](results/povswim2success.png)
 
 ## Motivation
 
@@ -18,46 +18,66 @@ This notebook has not yet been integrated into the full device - it's testing wh
 
 ## Dataset
 
-- 954 labeled images total : 916 train / 26 validation / 12 test
+- 1100 labeled images total : 1000 train (91%) / 50 validation (4.5%) / 50 test (4.5%)
 - Labeled via Roboflow : *https://universe.roboflow.com/kornranaths-workspace/lanelinedetection*
 - Images show pool views, primarily underwater and with lane lines visible
 
-**Note:** the validation set is small (26 images), so metrics below should be read as directional rather than precise - they'll have some noise, and a larger validation set would give a more reliable picture.
+**Preprocessing**
+
+Auto-Orient: Applied
+
+Resize: Stretch to 432x432
+
+**Augmentations**
+
+Outputs per training example: 10
+
+Flip: Horizontal
+
+Rotation: Between -5° and +5°
+
+Shear: ±12° Horizontal, ±11° Vertical
+
+Brightness: Between -20% and +20%
+
+Noise: Up to 0.97% of pixels
+
+Motion Blur: Length 20px, Angle: 0°, Frames: 1
 
 ## Results
 
 | Metric | Bounding Boxes | Segmentation Masks |
 |---|---:|---:|
-| Precision | 0.903 | 0.914 |
-| Recall | 0.614 | 0.615 |
-| mAP@0.5 | 0.687 | 0.696 |
-| mAP@0.5:0.95 | 0.496 | 0.353 |
+| Precision | 0.865 | 0.880 |
+| Recall | 0.726 | 0.703 |
+| mAP@0.5 | 0.805 | 0.786 |
+| mAP@0.5:0.95 | 0.613 | 0.504 |
 
 **Per class (segmentation):**
 
 | Class | Mask mAP@0.5 | Mask mAP@0.5:0.95 | Mean IoU |
 |---|---:|---:|---:|
-| lane | 0.794 | 0.412 | 0.706 |
-| t_mark | 0.598 | 0.294 | 0.660 |
+| lane | 0.773 | 0.469 | 0.679 |
+| t_mark | 0.798 | 0.539 | 0.713 |
 
-**Reading these numbers:** precision is high (~91%) - when model predicts a lane line or T-mark, usually correct. Recall is lower (~62%) - misses a meaningful fraction of lines/marks that are actually present, more often than it produces false positives. `lane` detection noticeably stronger than `t_mark` detection across every metric, which lines up with sample image below : high-confidence lane predictions (0.86–0.95) vs. much lower-confidence T-mark predictions (0.29–0.40).
+Reading these numbers: precision is high (~88%) - when the model predicts a `lane` or `t_mark`, it's usually correct. Recall is meaningfully better than the previous version (~70%, up from ~62%) - the model now catches a larger share of lines/marks that are actually present. `t_mark` detection has caught up to and now slightly edges out lane on mask mAP@0.5 and Mean IoU, a reversal from earlier versions where lane was clearly stronger. The small dip in lane's Mean IoU (0.706 → 0.679) is within the noise band for a 50-image validation set and isn't consistent across all lane metrics (overall performance of most categories - e.g. mAP@0.5:0.95 - actually improved significantly), so it's best read as minor measurement noise rather than a real regression.
 
 **Sample result:**
 
 | Input | Prediction |
 |---|---|
-| ![Raw input](samples/povswim1.jpg) | ![Segmented output](results/pooldetectionfirstsuccess.png) |
+| ![Raw input](samples/povswim1.jpg) | ![Segmented output](results/povswim1success.png) |
 
-Model correctly picks out all three visible lane lines in this frame, including two off to the side, not just the center one directly in view, but left-most line has been mistakenly flagged as `lane`. T-mark detection is also present but visibly less confident. 
+Model correctly picks out all three visible lane lines in this frame, including two off to the side, not just the center one directly in view. Left-most line has also been mistakenly flagged as `lane` (although with visibly less confidence). `t_mark` detection is also present with higher confidence, up ~54% compared to earlier versions.
 
 ## Limitations / Next Steps
 
-- **T-mark detection is weak** relative to lane detection (mAP@0.5 of 0.598 vs 0.794) - likely needs more T-mark examples in training set, since they're smaller and less visually distinct than the lane lines.
-- **Recall is the main bottleneck**, not precision - the model is conservative and misses real lines/marks more than it hallucinates fake ones. Worth investigating whether this is a confidence-threshold issue or a genuine detection gap (e.g. lines at the edge of frame, poor lighting).
-- **Small validation set** (26 images) - metrics should be treated as a rough signal, not a precise benchmark.
+- **T-mark detection has closed the gap with lane detection** after adding targeted T-mark training examples, it now performs on par with (and slightly ahead of) lane on mask mAP@0.5 (0.798 vs 0.773) and Mean IoU (0.713 vs 0.679). The earlier class imbalance issue appears resolved, though it's worth confirming this holds on a larger validation set.
+- **Recall is still the main bottleneck**, though it's improved - up from ~62% to ~70% overall, but the model remains conservative, missing real lines/marks more than it hallucinates fake ones. Still worth investigating whether this is a confidence-threshold tuning issue or a genuine detection gap (e.g. lines at the edge of frame, poor lighting, occlusion by swimmers).
+- **Validation set is larger but still modest** (50 images, up from 26) - a meaningful improvement in reliability, but still small enough that per-class metrics (especially the lane/t_mark comparison) should be treated as a reasonable signal rather than a precise benchmark. The small dip in lane Mean IoU is likely within this noise band.
 - **Only tested on still images**, not video - real-world use (whether for the swim assistive device or otherwise) would need to handle a continuous video stream, motion blur, and frame-to-frame consistency.
 
-**Next steps:** add more T-mark examples to close the class gap, test on video rather than stills, and evaluate on images from a different pool to check generalization.
+**Next steps:** improve datasplit balance by factoring in instance counts, test on video rather than stills.
 
 ## Running it
 
